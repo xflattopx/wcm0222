@@ -1,1 +1,2 @@
-# wcm0222
+# Point of Sale System for Tool Rentals
+
