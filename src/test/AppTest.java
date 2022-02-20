@@ -26,7 +26,7 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         Checkout checkout = new Checkout(tools);
         tools.add(new Tool("LADW", new ToolType("Chainsaw", 1.49, true, false, true)));
-        assertEquals(0, checkout.calculateItemTotal("LADW", new Date(2020, 6, 2), 3, 10), delta);
+        assertEquals(4.02, checkout.calculateItemTotal("LADW", new Date(2020, 6, 2), 3, 10), delta);
 
     }
 
@@ -36,7 +36,7 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         Checkout checkout = new Checkout(tools);
         tools.add(new Tool("CHNS", new ToolType("Ladder", 1.99, true, true, false)));
-        assertEquals(0, checkout.calculateItemTotal("CHNS", new Date(2020, 6, 2), 3, 10), delta);
+        assertEquals(3.58, checkout.calculateItemTotal("CHNS", new Date(2020, 6, 2), 3, 10), delta);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         Checkout checkout = new Checkout(tools);
         tools.add(new Tool("JAKD", new ToolType("Jackhammer", 2.99, true, false, false)));
-        assertEquals(0, checkout.calculateItemTotal("JAKD", new Date(2015, 8, 3), 3, 10), delta);
+        assertEquals(2.69, checkout.calculateItemTotal("JAKD", new Date(2015, 8, 3), 3, 10), delta);
     }
 
     @Test
@@ -63,6 +63,6 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         Checkout checkout = new Checkout(tools);
         tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false)));
-        assertEquals(0, checkout.calculateItemTotal("JAKR", new Date(2020, 6, 2), 3, 10), delta);
+        assertEquals(2.69, checkout.calculateItemTotal("JAKR", new Date(2020, 6, 2), 3, 10), delta);
     }
 }

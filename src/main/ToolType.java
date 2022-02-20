@@ -9,19 +9,19 @@ public class ToolType {
 
     public String toolName;
     public double price;
-    public boolean dailyCharge;
     public boolean weekdayCharge;
     public boolean weekendCharge;
+    public boolean holidayCharge;
 
     public ToolType() {
 
     }
 
-    public ToolType(String toolName, double price, boolean daily, boolean week, boolean weekend) {
+    public ToolType(String toolName, double price, boolean week, boolean weekend, boolean holiday) {
         this.toolName = toolName;
         this.price = price;
-        this.dailyCharge = daily;
         this.weekdayCharge = week;
         this.weekendCharge = weekend;
+        this.holidayCharge = holiday;
     }
 }
