@@ -1,8 +1,9 @@
 
-// Point of Sale Tool Rental Tool
+// Point of Sale Tool
 // Author - Chase Moore
 import java.util.*;
 
+// This class is the parent class of our program.
 public class MainHandler {
 
     public static void main(String[] args) {
