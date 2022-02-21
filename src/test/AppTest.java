@@ -11,51 +11,52 @@ public class AppTest {
 
     double delta = 0.001; // Expecte dand Result should be within these bounds.
 
-    @Test
-    public void checkoutTestCase1() {
+    @Test(expected = IllegalArgumentException.class)
+    public void checkoutTestCase1() throws IllegalArgumentException {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false)));
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
-        assertEquals(0., checkout.calculateItemTotal("JAKR", LocalDate.of(2015, 9, 3), 5, 101), delta);
+        assertEquals(new IllegalArgumentException(),
+                checkout.calculateItemTotal("JAKR", LocalDate.of(2015, 9, 3), 5, 101));
     }
 
     @Test
-    public void checkoutTestCase2() {
+    public void checkoutTestCase2() throws Exception {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("LADW", new ToolType("Chainsaw", 1.49, true, false, true)));
+        tools.add(new Tool("LADW", new ToolType("Chainsaw", 1.49, true, false, true), "Shihl"));
         Checkout checkout = new Checkout(tools);
         assertEquals(2.682, checkout.calculateItemTotal("LADW", LocalDate.of(2020, 7, 2), 3, 10), delta);
 
     }
 
     @Test
-    public void checkoutTestCase3() {
+    public void checkoutTestCase3() throws Exception {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("CHNS", new ToolType("Ladder", 1.99, true, true, false)));
+        tools.add(new Tool("CHNS", new ToolType("Ladder", 1.99, true, true, false), "LADW"));
         Checkout checkout = new Checkout(tools);
         assertEquals(5.97, checkout.calculateItemTotal("CHNS", LocalDate.of(2015, 7, 2), 5, 25), delta);
     }
 
     @Test
-    public void checkoutTestCase4() {
+    public void checkoutTestCase4() throws Exception {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKD", new ToolType("Jackhammer", 2.99, true, false, false)));
+        tools.add(new Tool("JAKD", new ToolType("Jackhammer", 2.99, true, false, false), "DeWalt"));
         Checkout checkout = new Checkout(tools);
         assertEquals(8.97, checkout.calculateItemTotal("JAKD", LocalDate.of(2015, 9, 3), 6, 0), delta);
     }
 
     @Test
-    public void checkoutTestCase5() {
+    public void checkoutTestCase5() throws Exception {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false)));
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
         assertEquals(17.94, checkout.calculateItemTotal("JAKR", LocalDate.of(2015, 7, 2), 9, 0), delta);
     }
 
     @Test
-    public void checkoutTestCase6() {
+    public void checkoutTestCase6() throws Exception {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false)));
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
         assertEquals(1.495, checkout.calculateItemTotal("JAKR", LocalDate.of(2020, 7, 2), 4, 50), delta);
     }
@@ -63,7 +64,7 @@ public class AppTest {
     @Test
     public void chargeableDaysTest() {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false)));
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
         assertEquals(1, checkout.chargeableDays(LocalDate.of(2020, 7, 2), tools.get(0), 4));
     }
@@ -71,9 +72,49 @@ public class AppTest {
     @Test
     public void chargeableDaysTest2() {
         List<Tool> tools = new ArrayList<Tool>();
-        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, false)));
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
         assertEquals(3, checkout.chargeableDays(LocalDate.of(2020, 7, 2), tools.get(0), 4));
+    }
+
+    @Test
+    public void chargeableDaysTest3() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, false), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(12, checkout.chargeableDays(LocalDate.of(2020, 7, 5), tools.get(0), 12));
+    }
+
+    @Test
+    public void chargeableDaysTest4() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, false), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(11, checkout.chargeableDays(LocalDate.of(2022, 7, 3), tools.get(0), 12));
+    }
+
+    @Test
+    public void chargeableDaysTest5() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, true), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(1, checkout.chargeableDays(LocalDate.of(2022, 7, 4), tools.get(0), 1));
+    }
+
+    @Test
+    public void chargeableDaysTest6() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, false), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(0, checkout.chargeableDays(LocalDate.of(2022, 7, 4), tools.get(0), 1));
+    }
+
+    @Test
+    public void chargeableDaysTest7() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, true), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(1, checkout.chargeableDays(LocalDate.of(2020, 7, 3), tools.get(0), 2));
     }
 
     @Test

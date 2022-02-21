@@ -62,13 +62,8 @@ public class Holiday {
         LocalDate laborDay = laborDay(date.getYear());
         // System.out.println("independence day: " + independenceDay + " labor day: " +
         // laborDay + " date: " + date);
-        if (date.equals(independenceDay) || date.equals(laborDay)) {
-            System.out.println("Date: " + date + " independence day: " +
-                    independenceDay);
-            System.out.println("Date: " + date + " labor day: " + laborDay);
+        if (date.equals(independenceDay) || date.equals(laborDay))
             return true;
-        }
-
         return false;
     }
 }
