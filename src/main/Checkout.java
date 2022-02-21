@@ -5,7 +5,6 @@
 //  Discount percent: As a whole number, 0-100 (e.g. 20 = 20%)
 //  Check out date
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -78,7 +77,6 @@ public class Checkout {
 
     // ProvidedInformation() Collects the following information:
     // Tool code, rental day count, discount percent, checkout date
-    @Deprecated
     public void providedInformation() {
         String code;
         int month;
@@ -99,10 +97,10 @@ public class Checkout {
             if (temp > -1 || temp < 101) {
                 discount = temp;
             } else {
-                throw new IllegalArgumentException("Value: " + temp + " isn't beteen[] 0 - 100 ]");
+                throw new IllegalArgumentException("Value: " + temp + " isn't beteen[ 0 - 100 ]");
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Value isn't beteen[] 0 - 100 ]: " + temp);
+            System.out.println("Value: " + temp + " isn't beteen[ 0 - 100 ]");
         }
         System.out.print("Month of checkout [1-12]: ");
         month = scanner.nextInt();
@@ -118,8 +116,7 @@ public class Checkout {
     // Tool Code: A string uniquly identify the item.
     // Checkout Date: A date in which the customer intends on checking item out.
     // Rental Days: The number of days the customer intends on renting tool.
-    // Discount: A discount in which applies to the total
-
+    // Discount: A discount in which applies to the total.
     public double calculateItemTotal(String toolCode, LocalDate checkoutDate, int rentalDays, double discount)
             throws IllegalArgumentException {
 
