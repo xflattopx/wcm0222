@@ -5,7 +5,7 @@
 //  Discount percent: As a whole number, 0-100 (e.g. 20 = 20%)
 //  Check out date
 
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
@@ -66,12 +66,12 @@ public class Checkout {
         System.out.println("_______________________________");
         System.out.println("|___Welcome To Rent-A-Tool____|");
         System.out.println("|_____________________________|");
-        System.out.println("| View Checkout         - 1   |");
+        System.out.println("| Checkout              - 1   |");
         System.out.println("| View Total            - 2   |");
         System.out.println("| View Rental Agreement - 3   |");
         System.out.println("| Exit                  - 9   |");
         System.out.println("|_____________________________|");
-        System.out.print("  |Enter Value: ");
+        System.out.print("            |Enter Value: ");
 
     }
 
@@ -122,9 +122,9 @@ public class Checkout {
 
         Tool tool = new Tool();
         double disPercentage = discount / 100; // Taken off the total after checkout
-        double discountAmount = 0.0;
-        double itemTotal = 0.00;
-        double preItemTotal = 0.00;
+        double discountAmount = 0;
+        double itemTotal = 0;
+        double preItemTotal = 0;
         int chargeableDays = 0;
         boolean foundItem = false;
 
@@ -136,9 +136,7 @@ public class Checkout {
         }
 
         // determine which tool we're using (can be improved with key value pair)
-        for (
-
-                int i = 0; i < tools.size(); i++) {
+        for (int i = 0; i < tools.size(); i++) {
             // We found the tool.
             if (tools.get(i).toolCode.equals(toolCode)) {
                 tool = tools.get(i);
@@ -154,20 +152,20 @@ public class Checkout {
         }
 
         // Calculates the chargeable days.
-        chargeableDays =
-
-                chargeableDays(checkoutDate, tool, rentalDays);
+        chargeableDays = chargeableDays(checkoutDate, tool, rentalDays);
 
         // Make sure our percentage is in bounds
-        if (disPercentage > -1 || disPercentage < 101)
-            discountAmount = (tool.type.price * chargeableDays) * disPercentage;
-        else {
+        if (disPercentage > -1 || disPercentage < 101) {
+            // Math.round(a*100)/100;
+            discountAmount = Math.round(((tool.type.price * chargeableDays) * disPercentage) * 100.00) / 100.00;
+            System.out.println("discount amount: " + discountAmount);
+        } else {
             throw new IllegalArgumentException("Value: " + disPercentage + " isn't beteen[ 0 - 100 ]");
             // return itemTotal;
         }
 
-        preItemTotal = chargeableDays * tool.type.price;
-        itemTotal = (chargeableDays * tool.type.price) - discountAmount;
+        preItemTotal = Math.round((chargeableDays * tool.type.price) * 100.00) / 100.00;
+        itemTotal = Math.round(((chargeableDays * tool.type.price) - discountAmount) * 100.00) / 100.00;
 
         // Generate our Rental Agreement
         RentalAgreement itemAgreement = new RentalAgreement(tool.toolCode, tool, rentalDays, checkoutDate,

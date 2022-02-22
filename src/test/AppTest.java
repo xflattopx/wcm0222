@@ -11,6 +11,8 @@ public class AppTest {
 
     double delta = 0.001; // Expecte dand Result should be within these bounds.
 
+    /***************** Required Tests ******************/
+
     @Test(expected = IllegalArgumentException.class)
     public void checkoutTestCase1() throws IllegalArgumentException {
         List<Tool> tools = new ArrayList<Tool>();
@@ -25,7 +27,7 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         tools.add(new Tool("LADW", new ToolType("Chainsaw", 1.49, true, false, true), "Shihl"));
         Checkout checkout = new Checkout(tools);
-        assertEquals(2.682, checkout.calculateItemTotal("LADW", LocalDate.of(2020, 7, 2), 3, 10), delta);
+        assertEquals(2.68, checkout.calculateItemTotal("LADW", LocalDate.of(2020, 7, 2), 3, 10), delta);
 
     }
 
@@ -58,11 +60,34 @@ public class AppTest {
         List<Tool> tools = new ArrayList<Tool>();
         tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
-        assertEquals(1.495, checkout.calculateItemTotal("JAKR", LocalDate.of(2020, 7, 2), 4, 50), delta);
+        assertEquals(1.49, checkout.calculateItemTotal("JAKR", LocalDate.of(2020, 7, 2), 4, 50), delta);
     }
 
+    /***********************************************/
+    /********** Exception Handling Tests ***********/
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidPercentageTest1() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(new IllegalArgumentException(),
+                checkout.calculateItemTotal("JAKR", LocalDate.of(2015, 9, 3), 5, -1));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void invalidPercentageTest2() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(new IllegalArgumentException(),
+                checkout.calculateItemTotal("JAKR", LocalDate.of(2015, 9, 3), 1, 100.1));
+    }
+
+    /***********************************************/
+    /************* Chargeble Days Tests ************/
     @Test
-    public void chargeableDaysTest() {
+    public void chargeableDaysTest1() {
         List<Tool> tools = new ArrayList<Tool>();
         tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, false, false), "Rigid"));
         Checkout checkout = new Checkout(tools);
@@ -118,6 +143,32 @@ public class AppTest {
     }
 
     @Test
+    public void chargeableDaysTest8() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, true, true, true), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(12, checkout.chargeableDays(LocalDate.of(2021, 7, 5), tools.get(0), 12));
+    }
+
+    @Test
+    public void chargeableDaysTest9() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, false, true, true), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(3, checkout.chargeableDays(LocalDate.of(2021, 7, 5), tools.get(0), 7));
+    }
+
+    @Test
+    public void chargeableDaysTest10() {
+        List<Tool> tools = new ArrayList<Tool>();
+        tools.add(new Tool("JAKR", new ToolType("Jackhammer", 2.99, false, false, true), "Rigid"));
+        Checkout checkout = new Checkout(tools);
+        assertEquals(2, checkout.chargeableDays(LocalDate.of(2021, 7, 5), tools.get(0), 100));
+    }
+
+    /***********************************************/
+    /**************** Holiday Tests ****************/
+    @Test
     public void isHolidayIndependenceDayTest1() {
         Holiday holiday = new Holiday(LocalDate.of(2020, 7, 4));
         assertEquals(false, holiday.isHoliday());
@@ -127,6 +178,18 @@ public class AppTest {
     public void isHolidayIndependenceDayTest2() {
         Holiday holiday = new Holiday(LocalDate.of(2020, 7, 3));
         assertEquals(true, holiday.isHoliday());
+    }
+
+    @Test
+    public void isHolidayIndepenenceTest3() {
+        Holiday holiday = new Holiday(LocalDate.of(2021, 7, 5));
+        assertEquals(true, holiday.isHoliday());
+    }
+
+    @Test
+    public void isHolidayIndepenenceTest4() {
+        Holiday holiday = new Holiday(LocalDate.of(2021, 7, 4));
+        assertEquals(false, holiday.isHoliday());
     }
 
     @Test
@@ -140,4 +203,13 @@ public class AppTest {
         Holiday holiday = new Holiday(LocalDate.of(2020, 9, 7));
         assertEquals(true, holiday.isHoliday());
     }
+
+    @Test
+    public void isHolidayLaborDayTest3() {
+        Holiday holiday = new Holiday(LocalDate.of(2022, 9, 5));
+        assertEquals(true, holiday.isHoliday());
+    }
+
+    /***********************************************/
+    /***********************************************/
 }
