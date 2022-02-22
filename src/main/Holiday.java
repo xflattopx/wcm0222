@@ -1,13 +1,14 @@
+// Holiday is Independence day or Labor day
+// We also validate if the holiday falls on a given day.
+// We count observed holidays as actual holidays.
+// Example: July 4th falls on Saturday, holiday is Fri, July 3rd.
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class Holiday {
 
     LocalDate date;
-
-    Holiday() {
-
-    }
 
     Holiday(LocalDate date) {
         this.date = date;
@@ -17,8 +18,6 @@ public class Holiday {
     // independence day falls on.
     // theYear: The year in which we want the holiday.
     public LocalDate independenceDay(int theYear) {
-        // The first Monday in September
-
         int nMonth = 7; // July
         LocalDate julyDate = LocalDate.of(theYear, nMonth, 4);
         DayOfWeek day = julyDate.getDayOfWeek();
@@ -32,6 +31,9 @@ public class Holiday {
         }
     }
 
+    // LocalDate(theYear) returns the date in which
+    // labor day falls on.
+    // theYear: The year in which we want the holiday.
     public LocalDate laborDay(int theYear) {
         // The first Monday in September
 
@@ -57,18 +59,14 @@ public class Holiday {
         }
     }
 
+    // isHoliday() Determines if the date is a holiday or not.
     public boolean isHoliday() {
         LocalDate independenceDay = independenceDay(date.getYear());
         LocalDate laborDay = laborDay(date.getYear());
         // System.out.println("independence day: " + independenceDay + " labor day: " +
         // laborDay + " date: " + date);
-        if (date.equals(independenceDay) || date.equals(laborDay)) {
-            System.out.println("Date: " + date + " independence day: " +
-                    independenceDay);
-            System.out.println("Date: " + date + " labor day: " + laborDay);
+        if (date.equals(independenceDay) || date.equals(laborDay))
             return true;
-        }
-
         return false;
     }
 }

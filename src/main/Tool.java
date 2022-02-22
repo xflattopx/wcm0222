@@ -8,12 +8,14 @@ public class Tool {
 
     public String toolCode;
     public ToolType type;
+    public String brand;
 
     public Tool() {
     }
 
-    public Tool(String code, ToolType type) {
+    public Tool(String code, ToolType type, String brand) {
         this.toolCode = code;
         this.type = type;
+        this.brand = brand;
     }
 }

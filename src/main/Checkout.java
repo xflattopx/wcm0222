@@ -5,8 +5,7 @@
 //  Discount percent: As a whole number, 0-100 (e.g. 20 = 20%)
 //  Check out date
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+//import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.*;
@@ -18,6 +17,7 @@ public class Checkout {
     double discount;
     String dateOfCheckout; // The checkout date.
     double total = 0; // Calculates total at checkout
+    List<RentalAgreement> rentalAgreements = new ArrayList<RentalAgreement>(); // Store all our rental agreements
 
     public Checkout() {
 
@@ -27,9 +27,9 @@ public class Checkout {
         this.tools = tools;
     }
 
-    // transaction() is the main transaction done at checkout between
+    // checkout() is the main transaction done at checkout between
     // the customer and cashier.
-    public void transaction() {
+    public void checkout() {
         int input;
         optionPanel();
         input = scanner.nextInt();
@@ -39,15 +39,19 @@ public class Checkout {
                 optionPanel();
                 input = scanner.nextInt();
             } else if (input == 2) {
+                System.out.format("Running total: $%.2f\n", total);
+                pressEnterToContinue();
                 optionPanel();
                 input = scanner.nextInt();
             } else if (input == 3) {
+                showRentalAgreement(rentalAgreements);
                 optionPanel();
-                System.out.println("Running total: " + total);
                 input = scanner.nextInt();
+            } else if (input == 4) {
 
             } else {
-                System.out.println("Invalid Input");
+                System.out.println("Invalid Input...");
+                pressEnterToContinue();
                 optionPanel();
                 input = scanner.nextInt();
             }
@@ -57,75 +61,78 @@ public class Checkout {
     // optionPanel() is the initial interphase to navigate through
     // checkout.
     public void optionPanel() {
-        System.out.println("Welcome To Rent-A-Tool");
-        System.out.println("======================");
-        System.out.println("To Checkout a Tool - 1");
-        System.out.println("Return to Menu     - 2");
-        System.out.println("To View Total      - 3");
-        System.out.println("Exit               - 9");
-        System.out.println("======================");
+        System.out.println("_______________________________");
+        System.out.println("|___Welcome To Rent-A-Tool____|");
+        System.out.println("|_____________________________|");
+        System.out.println("| Checkout              - 1   |");
+        System.out.println("| View Total            - 2   |");
+        System.out.println("| View Rental Agreement - 3   |");
+        System.out.println("| Exit                  - 9   |");
+        System.out.println("|_____________________________|");
+        System.out.print("            |Enter Value: ");
 
     }
 
-    // ProvidedInformation() Collects the following information:
+    // providedInformation() Collects the following information:
     // Tool code, rental day count, discount percent, checkout date
-    @Deprecated
     public void providedInformation() {
-        // Date currentDate = new Date();
         String code;
         int month;
         int day;
         int year;
         int days;
-        int discount;
+        int discount = 0;
         int temp;
 
-        System.out.println("Please provide tool code: ");
+        System.out.print("Please provide tool code: ");
         code = scanner.next();
-        System.out.println("How many days would you like to rent: ");
+        System.out.print("How many days would you like to rent: ");
         days = scanner.nextInt();
-        System.out.println("Percentage of discount [between 0 - 100]: ");
+        System.out.print("Percentage of discount [between 0 - 100]: ");
         // Make sure our percentage is in bounds
         temp = scanner.nextInt();
-        if (temp > -1 || temp < 101) {
-            discount = temp;
-        } else {
-            System.out.println("Invalid discount.  Returning to menu.");
-            return;
+        try {
+            if (temp > -1 || temp < 101)
+                discount = temp;
+            else {
+                throw new IllegalArgumentException("Value: " + temp + " isn't beteen[ 0 - 100 ]");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Value: " + temp + " isn't beteen[ 0 - 100 ]");
         }
-
-        System.out.println("Month of checkout [1-12]");
+        System.out.print("Month of checkout [1-12]: ");
         month = scanner.nextInt();
-        System.out.println("Day of checkout [1-31]");
+        System.out.print("Day of checkout [1-31]: ");
         day = scanner.nextInt();
-        System.out.println("Year of checkout [1900 - 2022]");
+        System.out.print("Year of checkout [1900 - 2022]: ");
         year = scanner.nextInt();
         total += calculateItemTotal(code, LocalDate.of(year, month, day), days, discount);
 
     }
 
-    // calculateItemTotal() calculates the total of a tool given the following:
+    // calculateItemTotal(toolCode, checkoutDate, rentalDays, discount)
+    // Calculates the total of a tool given the following:
     // Tool Code: A string uniquly identify the item.
     // Checkout Date: A date in which the customer intends on checking item out.
     // Rental Days: The number of days the customer intends on renting tool.
-    // Discount: A discount in which applies to the total
+    // Discount: A discount in which applies to the total.
+    public double calculateItemTotal(String toolCode, LocalDate checkoutDate, int rentalDays, double discount)
+            throws IllegalArgumentException {
 
-    public double calculateItemTotal(String toolCode, LocalDate checkoutDate, int rentalDays, double discount) {
-        double disPercentage = discount / 100; // Taken off the total after checkout
-        // Date dueDate;
-        double discountAmount = 0.0;
-        double itemTotal = 0.00;
         Tool tool = new Tool();
+        double disPercentage = discount / 100; // Taken off the total after checkout
+        double discountAmount = 0;
+        double itemTotal = 0;
+        double preItemTotal = 0;
         int chargeableDays = 0;
         boolean foundItem = false;
 
         // If discount is out of bounds, return 0;
-        if ((discount < 0 || discount > 100)) {
-            System.out.println("Invalid discount.");
-            return itemTotal;
-        }
 
-        // determine which tool we're using (can be improved with key value pair)
+        if ((discount < 0 || discount > 100))
+            throw new IllegalArgumentException("Value: " + discount + " isn't beteen[ 0 - 100 ]");
+
+        // determine which tool we're using
         for (int i = 0; i < tools.size(); i++) {
             // We found the tool.
             if (tools.get(i).toolCode.equals(toolCode)) {
@@ -145,16 +152,22 @@ public class Checkout {
         chargeableDays = chargeableDays(checkoutDate, tool, rentalDays);
 
         // Make sure our percentage is in bounds
-        if (disPercentage > -1 || disPercentage < 101)
-            discountAmount = (tool.type.price * chargeableDays) * disPercentage;
-        else
-            return itemTotal;
+        if (disPercentage > -1 || disPercentage < 101) {
+            // Math.round(a*100)/100;
+            discountAmount = Math.round(((tool.type.price * chargeableDays) * disPercentage) * 100.00) / 100.00;
+            System.out.println("discount amount: " + discountAmount);
+        } else
+            throw new IllegalArgumentException("Value: " + disPercentage + " isn't beteen[ 0 - 100 ]");
 
-        itemTotal = (chargeableDays * tool.type.price) - discountAmount;
+        preItemTotal = Math.round((chargeableDays * tool.type.price) * 100.00) / 100.00;
+        itemTotal = Math.round(((chargeableDays * tool.type.price) - discountAmount) * 100.00) / 100.00;
 
-        System.out.println("item Price: " + tool.type.price + " Discount: " + discountAmount + " Total: " +
-                itemTotal);
-
+        // Generate our Rental Agreement
+        RentalAgreement itemAgreement = new RentalAgreement(tool.toolCode, tool, rentalDays, checkoutDate,
+                checkoutDate.plusDays(rentalDays), chargeableDays, preItemTotal, discount, discountAmount, itemTotal);
+        rentalAgreements.add(itemAgreement);
+        itemAgreement.generateCopy();
+        System.out.println("Rental Agreement Generated...");
         return itemTotal;
     }
 
@@ -164,12 +177,13 @@ public class Checkout {
     // date: The day in which the customer checked out the item.
     // tool: The tool they're checking out.
     // checkoutDays: How many days is the customer checking it out.
+
     public int chargeableDays(LocalDate date, Tool tool, int checkoutDays) {
         int daysCharged = 0;
         boolean chargeWeek = tool.type.weekdayCharge;
         boolean chargeWeekend = tool.type.weekendCharge;
         boolean chargeHoliday = tool.type.holidayCharge;
-        boolean isHoliday = false;
+
         LocalDate theDate = LocalDate.of(date.getYear(), date.getMonthValue(),
                 date.getDayOfMonth());
         System.out.println("The checkout date: " + theDate);
@@ -181,16 +195,14 @@ public class Checkout {
             // If the item charges holiday handle special case.
 
             Holiday holiday = new Holiday(tempDate);
-            isHoliday = holiday.isHoliday();
 
             // Do not iterate through the weeks if it's a holiday
-            if (isHoliday) {
+            if (holiday.isHoliday()) {
                 // If we charge for a holiday, increment daysCharged.
-                if (chargeHoliday) {
+                if (chargeHoliday)
                     daysCharged++;
-                }
             } else {
-                System.out.println("Non-Holiday Dates: " + tempDate + " Day: " + day);
+
                 switch (day) {
 
                     case SUNDAY:
@@ -225,13 +237,30 @@ public class Checkout {
             }
         }
 
-        System.out.println("chargeableDays: " + daysCharged);
-        System.out.println("Due Date: " + theDate);
-
-        // String output = sdf.format(calendar.getTime());
-        // System.out.println(output);
-
         return daysCharged;
+    }
+
+    // showRentalAgreement(agreements) prints all our rental agreements out.
+    // agreements: Our list of rental agreements.
+    public void showRentalAgreement(List<RentalAgreement> agreements) {
+        // Print out all our rental agreements!
+        if (agreements == null) {
+            System.out.println("No Rental Agreements Press Enter to Continue");
+            return;
+        }
+        for (int i = 0; i < agreements.size(); i++) {
+            agreements.get(i).generateCopy();
+            pressEnterToContinue();
+        }
+    }
+
+    // Prompts user to press enter key to continue.
+    public void pressEnterToContinue() {
+        try {
+            System.out.println("Press Enter to Continue...");
+            System.in.read();
+        } catch (Exception e) {
+        }
     }
 
 }
