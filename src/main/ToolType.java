@@ -13,10 +13,6 @@ public class ToolType {
     public boolean weekendCharge;
     public boolean holidayCharge;
 
-    public ToolType() {
-
-    }
-
     public ToolType(String toolName, double price, boolean week, boolean weekend, boolean holiday) {
         this.toolName = toolName;
         this.price = price;

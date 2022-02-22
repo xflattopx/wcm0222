@@ -27,17 +27,15 @@ public class Checkout {
         this.tools = tools;
     }
 
-    // transaction() is the main transaction done at checkout between
+    // checkout() is the main transaction done at checkout between
     // the customer and cashier.
-    public void transaction() {
+    public void checkout() {
         int input;
         optionPanel();
         input = scanner.nextInt();
         while (input != 9) {
             if (input == 1) {
-
                 providedInformation();
-
                 optionPanel();
                 input = scanner.nextInt();
             } else if (input == 2) {
@@ -75,7 +73,7 @@ public class Checkout {
 
     }
 
-    // ProvidedInformation() Collects the following information:
+    // providedInformation() Collects the following information:
     // Tool code, rental day count, discount percent, checkout date
     public void providedInformation() {
         String code;
@@ -94,9 +92,9 @@ public class Checkout {
         // Make sure our percentage is in bounds
         temp = scanner.nextInt();
         try {
-            if (temp > -1 || temp < 101) {
+            if (temp > -1 || temp < 101)
                 discount = temp;
-            } else {
+            else {
                 throw new IllegalArgumentException("Value: " + temp + " isn't beteen[ 0 - 100 ]");
             }
         } catch (IllegalArgumentException e) {
@@ -112,7 +110,8 @@ public class Checkout {
 
     }
 
-    // calculateItemTotal() calculates the total of a tool given the following:
+    // calculateItemTotal(toolCode, checkoutDate, rentalDays, discount)
+    // Calculates the total of a tool given the following:
     // Tool Code: A string uniquly identify the item.
     // Checkout Date: A date in which the customer intends on checking item out.
     // Rental Days: The number of days the customer intends on renting tool.
@@ -130,12 +129,10 @@ public class Checkout {
 
         // If discount is out of bounds, return 0;
 
-        if ((discount < 0 || discount > 100)) {
-
+        if ((discount < 0 || discount > 100))
             throw new IllegalArgumentException("Value: " + discount + " isn't beteen[ 0 - 100 ]");
-        }
 
-        // determine which tool we're using (can be improved with key value pair)
+        // determine which tool we're using
         for (int i = 0; i < tools.size(); i++) {
             // We found the tool.
             if (tools.get(i).toolCode.equals(toolCode)) {
@@ -159,10 +156,8 @@ public class Checkout {
             // Math.round(a*100)/100;
             discountAmount = Math.round(((tool.type.price * chargeableDays) * disPercentage) * 100.00) / 100.00;
             System.out.println("discount amount: " + discountAmount);
-        } else {
+        } else
             throw new IllegalArgumentException("Value: " + disPercentage + " isn't beteen[ 0 - 100 ]");
-            // return itemTotal;
-        }
 
         preItemTotal = Math.round((chargeableDays * tool.type.price) * 100.00) / 100.00;
         itemTotal = Math.round(((chargeableDays * tool.type.price) - discountAmount) * 100.00) / 100.00;
@@ -203,13 +198,11 @@ public class Checkout {
 
             // Do not iterate through the weeks if it's a holiday
             if (holiday.isHoliday()) {
-                // System.out.println("Holiday Day: " + day);
                 // If we charge for a holiday, increment daysCharged.
-                if (chargeHoliday) {
+                if (chargeHoliday)
                     daysCharged++;
-                }
             } else {
-                // System.out.println("Normal Day: " + day);
+
                 switch (day) {
 
                     case SUNDAY:

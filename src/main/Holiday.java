@@ -59,7 +59,7 @@ public class Holiday {
         }
     }
 
-    // Determines if the date is a holiday or not.
+    // isHoliday() Determines if the date is a holiday or not.
     public boolean isHoliday() {
         LocalDate independenceDay = independenceDay(date.getYear());
         LocalDate laborDay = laborDay(date.getYear());

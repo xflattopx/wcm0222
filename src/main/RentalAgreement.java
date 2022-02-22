@@ -1,3 +1,6 @@
+// RentalAgreement Generates the rental agreement 
+// at checkout.
+
 import java.time.LocalDate;
 
 public class RentalAgreement {
@@ -29,6 +32,7 @@ public class RentalAgreement {
         this.finalCharge = finalCharge;
     }
 
+    // generateCopy() Prints out a rental agreement for the customer to view
     public void generateCopy() {
         System.out.println("_______________________________________");
         System.out.println("| Rental Agreement for " + tool.toolCode);
@@ -45,10 +49,6 @@ public class RentalAgreement {
         System.out.format("| Discount Amount: $%.2f\n", discountAmount);
         System.out.format("| Final Charge: $%.2f\n", finalCharge);
         System.out.println("_______________________________________");
-    }
-
-    {
-
     }
 
 }
