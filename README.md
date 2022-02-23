@@ -2,7 +2,7 @@
 
 A basic point of sale tool for rental items.
 
-# Running the program
+# Requirements
 
 make sure you have maven installed:
 https://community.chocolatey.org/packages/maven
@@ -10,5 +10,7 @@ https://community.chocolatey.org/packages/maven
 or 
 
 https://maven.apache.org/download.cgi
+
+
 
 
