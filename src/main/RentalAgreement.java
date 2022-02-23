@@ -1,8 +1,6 @@
 // RentalAgreement Generates the rental agreement 
 // at checkout.
 
-import java.time.LocalDate;
-
 public class RentalAgreement {
 
     String toolCode;
@@ -34,7 +32,6 @@ public class RentalAgreement {
 
     // generateCopy() Prints out a rental agreement for the customer to view
     public void generateCopy() {
-        System.out.println("_______________________________________");
         System.out.println("| Rental Agreement for " + tool.toolCode);
         System.out.format("| Tool Code: %s\n", toolCode);
         System.out.format("| Tool Type: %s\n", tool.type.toolName);
@@ -48,7 +45,7 @@ public class RentalAgreement {
         System.out.format("| Discount Percent: %-7s\n", Math.round(discountPercent) + "%");
         System.out.format("| Discount Amount: $%s\n", discountAmount);
         System.out.format("| Final Charge: $%s\n", finalCharge);
-        System.out.println("_______________________________________");
+        System.out.println("|____________________________________");
     }
 
 }

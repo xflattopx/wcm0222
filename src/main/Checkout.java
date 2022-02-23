@@ -5,7 +5,6 @@
 //  Discount percent: As a whole number, 0-100 (e.g. 20 = 20%)
 //  Check out date
 
-//import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -15,11 +14,13 @@ import java.util.*;
 public class Checkout {
 
     Scanner scanner = new Scanner(System.in);
+    List<RentalAgreement> rentalAgreements = new ArrayList<RentalAgreement>(); // Store all our rental agreements
     List<Tool> tools;
+    DecimalFormat decimalFormatter = new DecimalFormat("#,##0.00"); // Formatting currency
+    DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("MM/dd/uuuu"); // Formatting dates
     double discount;
     String dateOfCheckout; // The checkout date.
     double total = 0.00; // Calculates total at checkout
-    List<RentalAgreement> rentalAgreements = new ArrayList<RentalAgreement>(); // Store all our rental agreements
 
     public Checkout() {
 
@@ -33,6 +34,8 @@ public class Checkout {
     // the customer and cashier.
     public void checkout() {
         int input;
+
+        // The checkout handler.
         optionPanel();
         input = scanner.nextInt();
         while (input != 9) {
@@ -65,7 +68,7 @@ public class Checkout {
         System.out.println("| Exit                  - 9   |");
         System.out.println("|_____________________________|");
         if (total > 0)
-            System.out.format("| Total: $%.2f                 \n", total);
+            System.out.format("| Total: $%s                 \n", decimalFormatter.format(total));
         System.out.println("| Enter Value: ");
 
     }
@@ -103,7 +106,7 @@ public class Checkout {
         day = scanner.nextInt();
         System.out.print("Year of checkout [1900 - 2022]: ");
         year = scanner.nextInt();
-        total += calculateItemTotal(code, LocalDate.of(year, month, day), days, discount);
+        total += Math.round(calculateItemTotal(code, LocalDate.of(year, month, day), days, discount) * 100.00) / 100.00;
 
     }
 
@@ -116,8 +119,6 @@ public class Checkout {
     public double calculateItemTotal(String toolCode, LocalDate checkoutDate, int rentalDays, double discount)
             throws IllegalArgumentException {
 
-        DecimalFormat decimalFormatter = new DecimalFormat("#,###.00"); // Formatting currency
-        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("MM/dd/uuuu"); // Formatting dates
         Tool tool = new Tool();
         double disPercentage = discount / 100; // Taken off the total after checkout
         double discountAmount = 0;
@@ -127,8 +128,8 @@ public class Checkout {
         boolean foundItem = false;
         String formattedCheckoutDate; // our checkoutDate Formatted
         String formattedDueDate; // our due date formatted
-        // If discount is out of bounds, return 0;
 
+        // If discount is out of bounds, return 0;
         if ((discount < 0 || discount > 100))
             throw new IllegalArgumentException("Value: " + discount + " isn't beteen[ 0 - 100 ]");
 
@@ -164,6 +165,7 @@ public class Checkout {
 
         formattedDueDate = checkoutDate.plusDays(rentalDays).format(formatDate);
         formattedCheckoutDate = checkoutDate.format(formatDate);
+
         // Generate our Rental Agreement
         RentalAgreement itemAgreement = new RentalAgreement(tool.toolCode, tool, rentalDays, formattedCheckoutDate,
                 formattedDueDate, chargeableDays,
@@ -172,6 +174,7 @@ public class Checkout {
         rentalAgreements.add(itemAgreement);
         itemAgreement.generateCopy();
         System.out.println("Rental Agreement Generated...");
+
         return itemTotal;
     }
 
