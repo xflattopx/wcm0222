@@ -85,7 +85,7 @@ public class AppTest {
     }
 
     /***********************************************/
-    /************* Chargeble Days Tests ************/
+    /************ Chargeable Days Tests ************/
     @Test
     public void chargeableDaysTest1() {
         List<Tool> tools = new ArrayList<Tool>();
