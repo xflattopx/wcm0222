@@ -172,6 +172,7 @@ public class AppTest {
     public void isHolidayIndependenceDayTest1() {
         Holiday holiday = new Holiday(LocalDate.of(2020, 7, 4));
         assertEquals(false, holiday.isHoliday());
+
     }
 
     @Test
