@@ -6,8 +6,10 @@
 //  Check out date
 
 //import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Checkout {
@@ -16,7 +18,7 @@ public class Checkout {
     List<Tool> tools;
     double discount;
     String dateOfCheckout; // The checkout date.
-    double total = 0; // Calculates total at checkout
+    double total = 0.00; // Calculates total at checkout
     List<RentalAgreement> rentalAgreements = new ArrayList<RentalAgreement>(); // Store all our rental agreements
 
     public Checkout() {
@@ -36,19 +38,13 @@ public class Checkout {
         while (input != 9) {
             if (input == 1) {
                 providedInformation();
-                optionPanel();
-                input = scanner.nextInt();
-            } else if (input == 2) {
-                System.out.format("Running total: $%.2f\n", total);
                 pressEnterToContinue();
                 optionPanel();
                 input = scanner.nextInt();
-            } else if (input == 3) {
+            } else if (input == 2) {
                 showRentalAgreement(rentalAgreements);
                 optionPanel();
                 input = scanner.nextInt();
-            } else if (input == 4) {
-
             } else {
                 System.out.println("Invalid Input...");
                 pressEnterToContinue();
@@ -65,11 +61,12 @@ public class Checkout {
         System.out.println("|___Welcome To Rent-A-Tool____|");
         System.out.println("|_____________________________|");
         System.out.println("| Checkout              - 1   |");
-        System.out.println("| View Total            - 2   |");
-        System.out.println("| View Rental Agreement - 3   |");
+        System.out.println("| View Rental Agreement - 2   |");
         System.out.println("| Exit                  - 9   |");
         System.out.println("|_____________________________|");
-        System.out.print("            |Enter Value: ");
+        if (total > 0)
+            System.out.format("| Total: $%.2f                 \n", total);
+        System.out.println("| Enter Value: ");
 
     }
 
@@ -119,6 +116,8 @@ public class Checkout {
     public double calculateItemTotal(String toolCode, LocalDate checkoutDate, int rentalDays, double discount)
             throws IllegalArgumentException {
 
+        DecimalFormat decimalFormatter = new DecimalFormat("#,###.00"); // Formatting currency
+        DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("MM/dd/uuuu"); // Formatting dates
         Tool tool = new Tool();
         double disPercentage = discount / 100; // Taken off the total after checkout
         double discountAmount = 0;
@@ -126,7 +125,8 @@ public class Checkout {
         double preItemTotal = 0;
         int chargeableDays = 0;
         boolean foundItem = false;
-
+        String formattedCheckoutDate; // our checkoutDate Formatted
+        String formattedDueDate; // our due date formatted
         // If discount is out of bounds, return 0;
 
         if ((discount < 0 || discount > 100))
@@ -162,9 +162,13 @@ public class Checkout {
         preItemTotal = Math.round((chargeableDays * tool.type.price) * 100.00) / 100.00;
         itemTotal = Math.round(((chargeableDays * tool.type.price) - discountAmount) * 100.00) / 100.00;
 
+        formattedDueDate = checkoutDate.plusDays(rentalDays).format(formatDate);
+        formattedCheckoutDate = checkoutDate.format(formatDate);
         // Generate our Rental Agreement
-        RentalAgreement itemAgreement = new RentalAgreement(tool.toolCode, tool, rentalDays, checkoutDate,
-                checkoutDate.plusDays(rentalDays), chargeableDays, preItemTotal, discount, discountAmount, itemTotal);
+        RentalAgreement itemAgreement = new RentalAgreement(tool.toolCode, tool, rentalDays, formattedCheckoutDate,
+                formattedDueDate, chargeableDays,
+                decimalFormatter.format(preItemTotal), discount, decimalFormatter.format(discountAmount),
+                decimalFormatter.format(itemTotal));
         rentalAgreements.add(itemAgreement);
         itemAgreement.generateCopy();
         System.out.println("Rental Agreement Generated...");

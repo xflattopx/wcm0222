@@ -8,18 +8,18 @@ public class RentalAgreement {
     String toolCode;
     Tool tool;
     int rentalDays;
-    LocalDate checkoutDate;
-    LocalDate dueDate;
+    String checkoutDate;
+    String dueDate;
     int chargeDays;
-    double originalCharge;
+    String originalCharge;
     double discountPercent;
-    double discountAmount;
-    double finalCharge;
+    String discountAmount;
+    String finalCharge;
 
     public RentalAgreement(String toolCode, Tool tool, int rentalDays,
-            LocalDate checkoutDate, LocalDate dueDate, int chargeDays, double originalCharge, double discountPercent,
-            double discountAmount,
-            double finalCharge) {
+            String checkoutDate, String dueDate, int chargeDays, String originalCharge, double discountPercent,
+            String discountAmount,
+            String finalCharge) {
         this.toolCode = toolCode;
         this.tool = tool;
         this.rentalDays = rentalDays;
@@ -36,18 +36,18 @@ public class RentalAgreement {
     public void generateCopy() {
         System.out.println("_______________________________________");
         System.out.println("| Rental Agreement for " + tool.toolCode);
-        System.out.format("| Tool Code: %-16s\n", toolCode);
-        System.out.format("| Tool Type: %-16s\n", tool.type.toolName);
-        System.out.format("| Tool Brand: %-14s\n", tool.brand);
-        System.out.format("| Rental Days: %-13s\n", rentalDays);
-        System.out.format("| Checkout Date: %-12s\n", checkoutDate);
-        System.out.format("| Due Date: %-12s\n", dueDate);
+        System.out.format("| Tool Code: %s\n", toolCode);
+        System.out.format("| Tool Type: %s\n", tool.type.toolName);
+        System.out.format("| Tool Brand: %s\n", tool.brand);
+        System.out.format("| Rental Days: %s\n", rentalDays);
+        System.out.format("| Checkout Date: %s\n", checkoutDate);
+        System.out.format("| Due Date: %s\n", dueDate);
         System.out.format("| Daily Rental Charge: $%.2f\n", tool.type.price);
-        System.out.format("| Chargeable Days: %4s\n", chargeDays);
-        System.out.format("| Original Charge: $%.2f\n", originalCharge);
+        System.out.format("| Chargeable Days: %s\n", chargeDays);
+        System.out.format("| Original Charge: $%s\n", originalCharge);
         System.out.format("| Discount Percent: %-7s\n", Math.round(discountPercent) + "%");
-        System.out.format("| Discount Amount: $%.2f\n", discountAmount);
-        System.out.format("| Final Charge: $%.2f\n", finalCharge);
+        System.out.format("| Discount Amount: $%s\n", discountAmount);
+        System.out.format("| Final Charge: $%s\n", finalCharge);
         System.out.println("_______________________________________");
     }
 
