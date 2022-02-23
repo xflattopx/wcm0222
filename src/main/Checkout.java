@@ -193,8 +193,7 @@ public class Checkout {
 
         LocalDate theDate = LocalDate.of(date.getYear(), date.getMonthValue(),
                 date.getDayOfMonth());
-        System.out.println("The checkout date: " + theDate);
-        // SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
         for (int i = 0; i != checkoutDays; i++) {
             LocalDate tempDate = theDate.plusDays(i);
             DayOfWeek day = tempDate.getDayOfWeek();
