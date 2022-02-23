@@ -9,7 +9,7 @@ import org.junit.*;
 
 public class AppTest {
 
-    double delta = 0.001; // Expecte dand Result should be within these bounds.
+    double delta = 0.001; // Expected and Result should be within these bounds.
 
     /***************** Required Tests ******************/
 
